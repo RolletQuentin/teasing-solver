@@ -21,3 +21,15 @@ pip install -r requirements.txt
 ```
 
 ## Run
+
+Run this program (if you activate the virtual environment) :
+```
+.venv/bin/python3.11 main.py
+```
+
+If you don't activate the virtual environment :
+```
+python3 main.py
+```
+
+⚠️ Be careful ! Your Python version may not the same as my version ! ⚠️
