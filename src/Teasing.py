@@ -59,7 +59,46 @@ class Teasing:
         teasing_board = numbers.reshape((3, 3))
         return teasing_board
 
+    def win(self):
+        """Return True if the game is finished, else False
+        """
+
+        return self.board == [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+
+    def move(self, pos, direction):
+        """Move one box
+
+        Args:
+            pos (tuple(int, int)):
+                the position of the box
+
+            direction (string):
+                take one of the following values : "right", "left", "up" or "down"
+        """
+
+        i, j = pos
+        if direction == "up" and i != 0 and self.board[i-1, j] == 0:
+            self.board[i-1, j] = self.board[i, j]
+            self.board[i, j] = 0
+
+        if direction == "down" and i != 2 and self.board[i+1, j] == 0:
+            self.board[i+1, j] = self.board[i, j]
+            self.board[i, j] = 0
+
+        if direction == "left" and j != 0 and self.board[i, j-1] == 0:
+            self.board[i, j-1] = self.board[i, j]
+            self.board[i, j] = 0
+
+        if direction == "right" and j != 2 and self.board[i, j+1] == 0:
+            self.board[i, j+1] = self.board[i, j]
+            self.board[i, j] = 0
+
 
 if __name__ == "__main__":
-    game = Teasing()
+    game = Teasing(seed=1)
+    game.move((2, 2), "up")
+    game.move((1, 2), "up")
+    game.move((2, 1), "right")
+    game.move((1, 1), "down")
+    game.move((1, 2), "left")
     print(game)
