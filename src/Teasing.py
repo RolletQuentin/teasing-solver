@@ -65,40 +65,42 @@ class Teasing:
 
         return self.board == [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
 
-    def move(self, pos, direction):
+    def move(self, pos):
         """Move one box
 
         Args:
             pos (tuple(int, int)):
                 the position of the box
-
-            direction (string):
-                take one of the following values : "right", "left", "up" or "down"
         """
 
         i, j = pos
-        if direction == "up" and i != 0 and self.board[i-1, j] == 0:
+
+        # if the empty case is up to the selected box
+        if i != 0 and self.board[i-1, j] == 0:
             self.board[i-1, j] = self.board[i, j]
             self.board[i, j] = 0
 
-        if direction == "down" and i != 2 and self.board[i+1, j] == 0:
+        # if the empty case is below to the selected box
+        if i != 2 and self.board[i+1, j] == 0:
             self.board[i+1, j] = self.board[i, j]
             self.board[i, j] = 0
 
-        if direction == "left" and j != 0 and self.board[i, j-1] == 0:
+        # if the empty case is left to the selected box
+        if j != 0 and self.board[i, j-1] == 0:
             self.board[i, j-1] = self.board[i, j]
             self.board[i, j] = 0
 
-        if direction == "right" and j != 2 and self.board[i, j+1] == 0:
+        # if the empty case is right to the selected box
+        if j != 2 and self.board[i, j+1] == 0:
             self.board[i, j+1] = self.board[i, j]
             self.board[i, j] = 0
 
 
 if __name__ == "__main__":
     game = Teasing(seed=1)
-    game.move((2, 2), "up")
-    game.move((1, 2), "up")
-    game.move((2, 1), "right")
-    game.move((1, 1), "down")
-    game.move((1, 2), "left")
+    game.move((2, 2))
+    game.move((2, 2))
+    game.move((2, 1))
+    game.move((1, 1))
+    game.move((1, 2))
     print(game)

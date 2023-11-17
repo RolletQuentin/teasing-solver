@@ -15,7 +15,7 @@ async def start_game():
 
 
 @app.post("/make_move/")
-async def make_move(pos: tuple, direction: str):
+async def make_move(pos: tuple):
     global game
     if game is None:
         raise HTTPException(
@@ -23,7 +23,7 @@ async def make_move(pos: tuple, direction: str):
 
     pos = tuple(pos)
     try:
-        game.move(pos, direction)
+        game.move(pos)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
