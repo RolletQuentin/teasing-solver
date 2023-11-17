@@ -62,8 +62,7 @@ class Teasing:
     def win(self):
         """Return True if the game is finished, else False
         """
-
-        return self.board == [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+        return np.array_equal(self.board, np.array([[1, 2, 3], [4, 5, 6], [7, 8, 0]]))
 
     def move(self, pos):
         """Move one box

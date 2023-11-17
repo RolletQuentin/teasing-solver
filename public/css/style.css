@@ -4,7 +4,7 @@ main {
     align-items: center;
 }
 
-.game-container {
+#board {
     width: 330px;
     display: flex;
     flex-wrap: wrap;
@@ -12,10 +12,18 @@ main {
     align-items: center;
 }
 
-.game-container > div {
+#board > div {
     border: 1px solid black;
     width: 100px;
     height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+}
+
+#board > div:hover {
+    cursor: pointer;
 }
 
 .buttons button {

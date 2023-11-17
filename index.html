@@ -15,25 +15,23 @@
             </div>
 
             <section class="game">
-                <div class="game-container">
-                    <div id="case-1">1</div>
-                    <div id="case-2">2</div>
-                    <div id="case-3">3</div>
-                    <div id="case-4">4</div>
-                    <div id="case-5">5</div>
-                    <div id="case-6">6</div>
-                    <div id="case-7">7</div>
-                    <div id="case-8">8</div>
-                    <div id="case-9"></div>
+                <div id="message"></div>
+                <div id="board">
+                    <div id="case-0" onclick="makeMove(0,0)"></div>
+                    <div id="case-1" onclick="makeMove(0,1)"></div>
+                    <div id="case-2" onclick="makeMove(0,2)"></div>
+                    <div id="case-3" onclick="makeMove(1,0)"></div>
+                    <div id="case-4" onclick="makeMove(1,1)"></div>
+                    <div id="case-5" onclick="makeMove(1,2)"></div>
+                    <div id="case-6" onclick="makeMove(2,0)"></div>
+                    <div id="case-7" onclick="makeMove(2,1)"></div>
+                    <div id="case-8" onclick="makeMove(2,2)"></div>
                 </div>
                 <div class="buttons">
-                    <button>Start game</button>
-                    <button>Reset game</button>
+                    <button onclick="startGame()">Start new game</button>
                 </div>
             </section>
-            
-
-            </div>
         </main>
+        <script src="public/js/main.js"></script>
     </body>
 </html>
