@@ -37,11 +37,11 @@ class Teasing:
         self.random_teasing_board()
 
     def __str__(self):
-        horizontal_line = "-------------\n"
+        horizontal_line = "----"*self.y + "-\n"
 
         # first line
         result = horizontal_line
-        for i in range(3):
+        for i in range(self.x):
             # Replace 0 with space
             row_str = "| " + " | ".join(" " if x == 0 else str(x)
                                         for x in self.board[i]) + " |\n"
@@ -88,7 +88,7 @@ class Teasing:
             self.board[i, j] = 0
 
         # if the empty case is below to the selected box
-        if i != 2 and self.board[i+1, j] == 0:
+        if i != self.x-1 and self.board[i+1, j] == 0:
             self.board[i+1, j] = self.board[i, j]
             self.board[i, j] = 0
 
@@ -98,13 +98,13 @@ class Teasing:
             self.board[i, j] = 0
 
         # if the empty case is right to the selected box
-        if j != 2 and self.board[i, j+1] == 0:
+        if j != self.y-1 and self.board[i, j+1] == 0:
             self.board[i, j+1] = self.board[i, j]
             self.board[i, j] = 0
 
 
 if __name__ == "__main__":
-    game = Teasing(seed=1)
+    game = Teasing(x=9, y=10, seed=1)
     game.move((2, 2))
     game.move((2, 2))
     game.move((2, 1))
