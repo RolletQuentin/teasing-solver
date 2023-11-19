@@ -64,8 +64,20 @@ class Teasing:
         else:
             np.random.seed(self.seed)
 
-        for _ in range(1000):
-            self.move((np.random.randint(self.x), np.random.randint(self.y)))
+        for _ in range(50*self.x*self.y):
+            zero_index = np.where(self.board == 0)
+            x0 = zero_index[0][0]
+            y0 = zero_index[1][0]
+            # we take a zone arround the empty case where we click
+            match np.random.randint(4):
+                case 0:
+                    self.move((x0-1, y0))
+                case 1:
+                    self.move((x0+1, y0))
+                case 2:
+                    self.move((x0, y0-1))
+                case 3:
+                    self.move((x0, y0+1))
 
     def win(self):
         """Return True if the game is finished, else False
@@ -80,34 +92,31 @@ class Teasing:
                 the position of the box
         """
 
-        i, j = pos
+        (i, j) = pos
 
-        # if the empty case is up to the selected box
-        if i != 0 and self.board[i-1, j] == 0:
-            self.board[i-1, j] = self.board[i, j]
-            self.board[i, j] = 0
+        if i >= 0 and i < self.x and j >= 0 and j < self.y:
+            # if the empty case is up to the selected box
+            if i > 0 and self.board[i-1, j] == 0:
+                self.board[i-1, j] = self.board[i, j]
+                self.board[i, j] = 0
 
-        # if the empty case is below to the selected box
-        if i != self.x-1 and self.board[i+1, j] == 0:
-            self.board[i+1, j] = self.board[i, j]
-            self.board[i, j] = 0
+            # if the empty case is below to the selected box
+            if i < self.x-1 and self.board[i+1, j] == 0:
+                self.board[i+1, j] = self.board[i, j]
+                self.board[i, j] = 0
 
-        # if the empty case is left to the selected box
-        if j != 0 and self.board[i, j-1] == 0:
-            self.board[i, j-1] = self.board[i, j]
-            self.board[i, j] = 0
+            # if the empty case is left to the selected box
+            if j > 0 and self.board[i, j-1] == 0:
+                self.board[i, j-1] = self.board[i, j]
+                self.board[i, j] = 0
 
-        # if the empty case is right to the selected box
-        if j != self.y-1 and self.board[i, j+1] == 0:
-            self.board[i, j+1] = self.board[i, j]
-            self.board[i, j] = 0
+            # if the empty case is right to the selected box
+            if j < self.y-1 and self.board[i, j+1] == 0:
+                self.board[i, j+1] = self.board[i, j]
+                self.board[i, j] = 0
 
 
 if __name__ == "__main__":
-    game = Teasing(x=9, y=10, seed=1)
-    game.move((2, 2))
-    game.move((2, 2))
-    game.move((2, 1))
-    game.move((1, 1))
-    game.move((1, 2))
+    game = Teasing(x=9, y=8, seed=1)
+    # game.move((8, 8))
     print(game)
