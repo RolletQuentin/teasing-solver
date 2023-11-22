@@ -17,7 +17,7 @@ class Teasing:
 
     """
 
-    def __init__(self, x=3, y=3, seed=-1):
+    def __init__(self, x=3, y=3, seed=-1, board=None, solution=None):
         """Constructs all the necessary attributes for the person object.
 
         Args:
@@ -27,14 +27,20 @@ class Teasing:
         self.y = y
         self.seed = seed
 
-        # generate the solution
-        solution = np.arange(1, self.x*self.y)
-        solution = np.append(solution, 0)
-        self.solution = solution.reshape((self.x, self.y))
+        if solution is None:
+            # generate the solution
+            solution = np.arange(1, self.x*self.y)
+            solution = np.append(solution, 0)
+            self.solution = solution.reshape((self.x, self.y))
+        else:
+            self.solution = solution
 
-        # generate random board
-        self.board = self.solution.copy()
-        self.random_teasing_board()
+        if board is None:
+            # generate random board
+            self.board = self.solution.copy()
+            self.random_teasing_board()
+        else:
+            self.board = board
 
     def __str__(self):
         horizontal_line = "----"*self.y + "-\n"
@@ -49,6 +55,14 @@ class Teasing:
             result += horizontal_line
 
         return result
+
+    def copy(self):
+        return Teasing(
+            x=self.x,
+            y=self.y,
+            seed=self.seed,
+            board=self.board.copy(),
+            solution=self.solution)
 
     def random_teasing_board(self):
         """Generate a random board for the teasing game. If the seed is -1, a random seed will be used.
@@ -99,21 +113,28 @@ class Teasing:
             if i > 0 and self.board[i-1, j] == 0:
                 self.board[i-1, j] = self.board[i, j]
                 self.board[i, j] = 0
+                return 1
 
             # if the empty case is below to the selected box
             if i < self.x-1 and self.board[i+1, j] == 0:
                 self.board[i+1, j] = self.board[i, j]
                 self.board[i, j] = 0
+                return 1
 
             # if the empty case is left to the selected box
             if j > 0 and self.board[i, j-1] == 0:
                 self.board[i, j-1] = self.board[i, j]
                 self.board[i, j] = 0
+                return 1
 
             # if the empty case is right to the selected box
             if j < self.y-1 and self.board[i, j+1] == 0:
                 self.board[i, j+1] = self.board[i, j]
                 self.board[i, j] = 0
+                return 1
+
+            return 0
+        return 0
 
 
 if __name__ == "__main__":

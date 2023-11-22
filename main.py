@@ -27,7 +27,7 @@ game = None
 @app.get("/start_game/")
 async def start_game():
     global game
-    game = Teasing()
+    game = Teasing(seed=2)
     return {"message": "Game started!", "board": game.board.tolist()}
 
 
