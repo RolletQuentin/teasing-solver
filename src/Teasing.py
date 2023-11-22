@@ -42,6 +42,9 @@ class Teasing:
         else:
             self.board = board
 
+    def __eq__(self, value: object) -> bool:
+        return np.array_equal(self.board, value.board)
+
     def __str__(self):
         horizontal_line = "----"*self.y + "-\n"
 
@@ -139,5 +142,7 @@ class Teasing:
 
 if __name__ == "__main__":
     game = Teasing(x=9, y=8, seed=1)
+    game2 = Teasing(x=9, y=9, seed=1)
     # game.move((8, 8))
     print(game)
+    print(game == game2)

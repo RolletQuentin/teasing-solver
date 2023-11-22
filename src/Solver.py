@@ -1,11 +1,15 @@
 from Teasing import Teasing
+from Node import Node
+from typing import List
 import numpy as np
 
 
 class Solver:
 
-    def __init__(self, geometry):
-        self.geometry = geometry
+    def __init__(self, geometry: str):
+        self.geometry: str = geometry
+        self.open_list: List(Node) = []
+        self.close_list: List(Node) = []
 
     def manhattan_geometry(self, game: Teasing):
         res = 0
@@ -27,187 +31,115 @@ class Solver:
 
         return res
 
-    # doesn't work
-    def greedy(self, game: Teasing):
-        moves = 0
-        while not (game.win()):
-            # calculate possible grid
-            zero_index = np.where(game.board == 0)
-            x0 = zero_index[0][0]
-            y0 = zero_index[1][0]
-            moving = 0  # 1 if we move, else 0
-            geometries = []
+    def cost(self, game: Teasing):
+        cost: int = 0
+        if self.geometry == "hamming":
+            cost = self.hamming_geometry(game)
+        elif self.geometry == "manhattan":
+            cost = self.manhattan_geometry(game)
 
-            # for each side, we calculate the geometry
-            # up
-            moving = game.move((x0-1, y0))
-            if moving == 1:
-                if self.geometry == "hamming":
-                    geometries.append(
-                        ((x0-1, y0), self.hamming_geometry(game)))
-                # we cancel the move
-                game.move((x0, y0))
+        return cost
 
-            # down
-            moving = game.move((x0+1, y0))
-            if moving == 1:
-                if self.geometry == "hamming":
-                    geometries.append(
-                        ((x0+1, y0), self.hamming_geometry(game)))
-                # we cancel the move
-                game.move((x0, y0))
+    def is_in_open_list(self, node: Node) -> int:
+        index = -1
+        i = 0
+        while i < len(self.open_list) and index == -1:
+            if self.open_list[i].game == node.game:
+                index = i
+            else:
+                i += 1
 
-            # left
-            moving = game.move((x0, y0-1))
-            if moving == 1:
-                if self.geometry == "hamming":
-                    geometries.append(
-                        ((x0, y0-1), self.hamming_geometry(game)))
-                # we cancel the move
-                game.move((x0, y0))
+        return index
 
-            # right
-            moving = game.move((x0, y0+1))
-            if moving == 1:
-                if self.geometry == "hamming":
-                    geometries.append(
-                        ((x0, y0+1), self.hamming_geometry(game)))
-                # we cancel the move
-                game.move((x0, y0))
+    def is_in_close_list(self, node: Node) -> int:
+        index = -1
+        i = 0
+        while i < len(self.close_list) and index == -1:
+            if self.close_list[i].game == node.game:
+                index = i
+            else:
+                i += 1
 
-            # select the best moves
-            best_moves = []
-            minimum = geometries[0][1]
-            for e in geometries:
-                # e : ((x,y), distance)
-                if e[1] == minimum:
-                    best_moves.append(e[0])
-                elif e[1] < minimum:
-                    minimum = e[1]
-                    best_moves = [e[0]]
+        return index
 
-            # print(f"geometries : {geometries}")
-            # print(f"Best moves : {best_moves}")
-            # print(game)
-            # print()
+    def update_node_in_open_list(self, node: Node, index: int):
+        if node.cost < self.open_list[index].cost:
+            self.open_list.pop(index)
+            self.add_node_to_open_list(node)
 
-            # choose a random move in the best moves
-            game.move(best_moves[np.random.randint(len(best_moves))])
-            moves += 1
+    def add_node_to_open_list(self, node: Node):
+        i = 0
+        added = False
+        while not (added) and i < len(self.open_list):
+            if node.cost < self.open_list[i].cost:
+                self.open_list.insert(i, node)
+                added = True
+            else:
+                i += 1
 
-        return moves
+        if not (added):
+            self.open_list.append(node)
 
     def a_star(self, game: Teasing):
-        open_list: list((Teasing, int)) = []
-        close_list: list((Teasing, int)) = []
-        moves: int = 0
+        number_of_iteration: int = 0
 
-        # add the current node to the list
-        if self.geometry == "hamming":
-            open_list.append((game.copy(), self.hamming_geometry(game)))
-        elif self.geometry == "manhattan":
-            open_list.append((game.copy(), self.manhattan_geometry(game)))
+        # add root to the open_list
+        root: Node = Node(None, game, self.cost(game))
+        self.open_list.append(root)
 
-        while len(open_list) > 0 and not (open_list[0][0].win()):
-            current_game: Teasing = open_list[0][0]
+        while len(self.open_list) > 0 and not (self.open_list[0].game.win()):
+            node: Node = self.open_list[0]
 
             # 1. watch near nodes
-            zero_index = np.where(current_game.board == 0)
-            x0 = zero_index[0][0]
-            y0 = zero_index[1][0]
+            zero_index = np.where(node.game.board == 0)
+            x0, y0 = zero_index[0][0], zero_index[1][0]
 
             # up
-            (open_list, close_list) = self.move(
-                current_game, open_list, close_list, x0-1, y0, x0, y0)
-
+            self.move(node, (x0-1, y0), (x0, y0))
             # down
-            (open_list, close_list) = self.move(
-                current_game, open_list, close_list, x0+1, y0, x0, y0)
-
+            self.move(node, (x0+1, y0), (x0, y0))
             # left
-            (open_list, close_list) = self.move(
-                current_game, open_list, close_list, x0, y0-1, x0, y0)
-
+            self.move(node, (x0, y0-1), (x0, y0))
             # right
-            (open_list, close_list) = self.move(
-                current_game, open_list, close_list, x0, y0+1, x0, y0)
+            self.move(node, (x0, y0+1), (x0, y0))
 
-            # 5. put the node from open_list to close_list
-            close_list.append(open_list.pop(0))
+            self.open_list.remove(node)
+            self.close_list.append(node)
+            number_of_iteration += 1
 
-            moves += 1
+            # print("open_list :")
+            # for e in self.open_list:
+            #     print(e.game)
+            # print("close_list :")
+            # for e in self.close_list:
+            #     print(e.game)
+            # print(node.game)
 
-            # print(f"open_list : {open_list}")
-            # print(f"close_list : {close_list}")
-            # print(current_game)
-            # print()
-
-        if len(open_list) == 0:
+        if len(self.open_list) == 0:
             print("No solutions")
 
         else:
-            print(open_list[0][0])
-        return moves
+            print(self.open_list[0].game)
 
-    def move(self, current_game: Teasing, open_list: list((Teasing, int)), close_list: list((Teasing, int)), x0: int, y0: int, x1: int, y1: int):
-        moving: int = 0  # 1 if we move, else 0
-        moving = current_game.move((x0, y0))
+        return number_of_iteration
+
+    def move(self, node: Node, initial_position, reset_position):
+        moving: int = 0
+        moving = node.game.move(initial_position)
         if moving == 1:
-            # 2. if it is in close_list, forget it
-            is_in_close_list = False
-            i = 0
-            while i < len(close_list) and not (is_in_close_list):
-                is_in_close_list = np.array_equal(
-                    current_game.board, close_list[i][0].board)
-                i += 1
+            new_node = Node(node, node.game.copy(), self.cost(node.game))
+            node.game.move(reset_position)
+            if self.is_in_close_list(new_node) == -1:
+                index_same_node = self.is_in_open_list(new_node)
 
-            if not (is_in_close_list):
-                new_game = current_game.copy()
-
-                # we cancel the move
-                current_game.move((x1, y1))
-                if self.geometry == "hamming":
-                    open_list = self.add_node(
-                        open_list, (new_game, self.hamming_geometry(new_game)))
-                elif self.geometry == "manhattan":
-                    open_list = self.add_node(
-                        open_list, (new_game, self.manhattan_geometry(new_game)))
-
-            # we cancel the move (it doesn't matter if the move is already cancel)
-            current_game.move((x1, y1))
-
-        return (open_list, close_list)
-
-    def add_node(self, open_list: list, node: (Teasing, int)):
-        is_in_list = False
-        i = 0
-        while i < len(open_list) and not (is_in_list):
-            is_in_list = np.array_equal(node[0].board, open_list[i][0].board)
-            i += 1
-
-        # 3. if the node is not in the open list, add it into the list
-        if not (is_in_list):
-            open_list = self.add_to_list_sort(open_list, node)
-
-        return open_list
-
-    def add_to_list_sort(self, open_list: list((Teasing, int)), node: (Teasing, int)):
-        i = 0
-        added = False
-        while not (added) and i < len(open_list):
-            if node[1] < open_list[i][1]:
-                open_list.insert(i, node)
-                added = True
-            i += 1
-
-        if not (added):
-            open_list.append(node)
-
-        return open_list
+                if index_same_node != -1:
+                    self.update_node_in_open_list(new_node, index_same_node)
+                else:
+                    self.add_node_to_open_list(new_node)
 
 
 if __name__ == "__main__":
-    game = Teasing(x=3, y=3, seed=1)
+    game = Teasing(x=3, y=3, seed=-1)
     solver = Solver("manhattan")
     print(game)
     print(solver.a_star(game))
