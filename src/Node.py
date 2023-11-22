@@ -1,4 +1,4 @@
-from Teasing import Teasing
+from src.Teasing import Teasing
 
 
 class Node:

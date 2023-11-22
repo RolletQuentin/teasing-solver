@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <link rel="stylesheet" href="public/css/style.css" />
+        <link rel="stylesheet" href="public/css/board.css" />
         <title>Teasing game</title>
     </head>
     <body>
@@ -16,22 +17,31 @@
 
             <section class="game">
                 <div id="message"></div>
-                <div id="board">
-                    <div id="case-0" onclick="makeMove(0,0)"></div>
-                    <div id="case-1" onclick="makeMove(0,1)"></div>
-                    <div id="case-2" onclick="makeMove(0,2)"></div>
-                    <div id="case-3" onclick="makeMove(1,0)"></div>
-                    <div id="case-4" onclick="makeMove(1,1)"></div>
-                    <div id="case-5" onclick="makeMove(1,2)"></div>
-                    <div id="case-6" onclick="makeMove(2,0)"></div>
-                    <div id="case-7" onclick="makeMove(2,1)"></div>
-                    <div id="case-8" onclick="makeMove(2,2)"></div>
+                <div class="options">
+                    <label for="rows">Rows:</label>
+                    <select id="rows" onchange="updateBoardSize()">
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <!-- Add more options as needed -->
+                    </select>
+
+                    <label for="columns">Columns:</label>
+                    <select id="columns" onchange="updateBoardSize()">
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <!-- Add more options as needed -->
+                    </select>
                 </div>
+                <div id="board" style="--columns: 3"></div>
                 <div class="buttons">
                     <button onclick="startGame()">Start new game</button>
+                    <button onclick="solvePuzzle()">Solve Puzzle</button>
                 </div>
             </section>
         </main>
         <script src="public/js/main.js"></script>
+        <script src="public/js/board.js"></script>
     </body>
 </html>

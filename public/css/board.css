@@ -1,0 +1,16 @@
+#board {
+    display: grid;
+    grid-template-columns: repeat(var(--columns, 3), 1fr);
+    margin-top: 20px;
+}
+
+#board div {
+    background-color: #3498db;
+    color: white;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    height: 80px; /* You can customize the height of each grid item */
+}

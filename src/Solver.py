@@ -1,7 +1,8 @@
-from Teasing import Teasing
-from Node import Node
+from src.Teasing import Teasing
+from src.Node import Node
 from typing import List
 import numpy as np
+from time import monotonic
 
 
 class Solver:
@@ -82,6 +83,7 @@ class Solver:
 
     def a_star(self, game: Teasing):
         number_of_iteration: int = 0
+        start_time = monotonic()
 
         # add root to the open_list
         root: Node = Node(None, game, self.cost(game))
@@ -128,7 +130,11 @@ class Solver:
             print(
                 f"Number of iterations to find the solution: {number_of_iteration}")
 
-        return solution
+        end_time = monotonic()
+        return {
+            'solution': solution,
+            'elapsed_time': end_time - start_time
+        }
 
     def move(self, node: Node, initial_position, reset_position):
         moving: int = 0
@@ -159,7 +165,7 @@ if __name__ == "__main__":
     game = Teasing(x=3, y=3, seed=-1)
     solver = Solver("hamming")
     print(game)
-    solver.a_star(game)
+    print(solver.a_star(game))
 
     # open_list: list((Teasing, int)) = [
     #     (None, 1), (None, 3), (None, 5), (None, 9)]
