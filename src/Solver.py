@@ -116,12 +116,19 @@ class Solver:
             # print(node.game)
 
         if len(self.open_list) == 0:
+            solution = []
             print("No solutions")
 
         else:
-            print(self.open_list[0].game)
+            solution = self.list_optimal_solution(self.open_list[0])
+            for e in solution:
+                print(e.game)
 
-        return number_of_iteration
+            print(f"Solution find in {len(solution)} moves !")
+            print(
+                f"Number of iterations to find the solution: {number_of_iteration}")
+
+        return solution
 
     def move(self, node: Node, initial_position, reset_position):
         moving: int = 0
@@ -137,12 +144,22 @@ class Solver:
                 else:
                     self.add_node_to_open_list(new_node)
 
+    def list_optimal_solution(self, node: Node):
+        res = []
+        while node.parent is not None:
+            res.append(node)
+            node = node.parent
+
+        res.reverse()
+
+        return res
+
 
 if __name__ == "__main__":
     game = Teasing(x=3, y=3, seed=-1)
-    solver = Solver("manhattan")
+    solver = Solver("hamming")
     print(game)
-    print(solver.a_star(game))
+    solver.a_star(game)
 
     # open_list: list((Teasing, int)) = [
     #     (None, 1), (None, 3), (None, 5), (None, 9)]
