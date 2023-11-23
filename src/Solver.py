@@ -16,11 +16,9 @@ class Solver:
         res = 0
         for i in range(game.x):
             for j in range(game.y):
-                if not (game.board[i, j] == 0):
-                    x0 = (game.board[i, j] - 1) // game.x
-                    y0 = (game.board[i, j] - 1) % game.y
-                    res += abs(x0-i) + (y0-j)
-
+                if game.board[i, j] != 0:
+                    x_goal, y_goal = divmod(game.board[i, j] - 1, game.y)
+                    res += abs(x_goal - i) + abs(y_goal - j)
         return res
 
     def hamming_geometry(self, game: Teasing):
@@ -163,7 +161,7 @@ class Solver:
 
 if __name__ == "__main__":
     game = Teasing(x=3, y=3, seed=-1)
-    solver = Solver("hamming")
+    solver = Solver("manhattan")
     print(game)
     print(solver.a_star(game))
 
