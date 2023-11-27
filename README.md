@@ -9,6 +9,7 @@ First, you can clone the project :
 
 ```
 git clone https://github.com/RolletQuentin/teasing-solver
+cd teasing-solver
 ```
 
 Then you have to activate an Python environment (optionnal) and install the requirements :
