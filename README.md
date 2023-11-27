@@ -39,4 +39,8 @@ This will start an API to use the Web Iser Interface. You can then open the file
 
 When you are on the website, you can choose the size of the puzzle and then start a game. You can play to the puzzle (click on the tiles) or ask to the program to solve it.
 
-The solver works with 3x3 puzzle in ~60/120 seconds, please wait the solution. I never try for bigger puzzles because it's take a lot of time !
+The solver works with 3x3 puzzle in less than 1 second, please wait the solution.
+
+For the 4x4, you can wait ~1/2 minutes.
+
+For the 5x5, you can wait ~10 minutes.
