@@ -111,7 +111,7 @@ function animateSolution() {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            geometry: "hamming",
+            geometry: "manhattan",
         }),
     })
         .then((response) => response.json())
@@ -137,7 +137,7 @@ function animateSolution() {
                             `Puzzle solved in ${elapsedTime.toFixed(2)} seconds`
                         );
                     }
-                }, 1000);
+                }, 500);
             } else {
                 console.error("No solution found");
                 solving = false;
